@@ -1,0 +1,82 @@
+﻿@model IPagedList<CRUD_CODE_FIRST.Models.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@using PagedList;
+@using PagedList.Mvc;
+
+<p style="color:chocolate;">@TempData["CreateMsg"]</p>
+@Html.Raw(TempData["UpdateMsg"])
+@Html.Raw(TempData["DeleteMsg"])
+
+
+<p>
+    @Html.ActionLink("Add New Employee", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+
+    <input type="submit" value="Delete" onclick="return confirm('Are you sure?')" class="btn btn-danger"/>
+    <br/>
+    <table class="table">
+        <tr>
+            <th>
+                <input id="checkBoxAll" type="checkbox" />
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Phone)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" class="chkCheckBoxId" value="@item.EmpID" name="EmpID" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.EmpID }, new { @class = "btn btn-success" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.EmpID }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+<!-- , new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded } -->
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#checkBoxAll').click(function () {
+                if ($(this).is(":checked"))
+                    $('.chkCheckBoxId').prop('checked', true);
+                else
+                    $('.chkCheckBoxId').prop('checked', false);
+            });
+        });
+    </script>
+}
